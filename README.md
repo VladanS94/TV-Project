@@ -1,3 +1,14 @@
+DAN 1 Petak 20.09.2024
+nekih 2h postavljanje projekata i razmisljanje kako i sta odraditi,
+1h upoznavanje sa dokumentacijom axios-mock-adapter bibliotekom.
+
+DAN 2 Subota 21.09.2024
+6h Pravio sam Navigaciju, Home Page i Side Menu,
+Tu sam ujedno i pokusavao strelicama da postavim da outline da ima aktivan film ali za sada mi nije uspelo da predje na Side meni. Ono o cemu razmisljam jeste da napravim u Context state koji ce da prati active.
+
+DAN 3 Nedelja 22.09.2024
+Nisam nista radio jer sam bio u Kraljevo posto mi se sestra porodila pa da posetim sestrica
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
