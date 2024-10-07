@@ -1,20 +1,38 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const Movie = ({ data, title, selected, enterSingleMovie }) => {
+const Movie = ({ data, title, column, selectedColumn, row }) => {
+  const movieRefs = useRef([]);
+
+  useEffect(() => {
+    if (selectedColumn === column && movieRefs.current[row]) {
+      movieRefs.current[row].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
+    }
+  }, [selectedColumn, column, row]);
+
   return (
     <div>
       <h1>{title}</h1>
       <div className="movie-list">
-        {data?.map((movie) => {
-          const isActive = movie?.id === selected?.id;
+        {data?.map((movie, index) => {
           return (
             <div
-              onSubmit={enterSingleMovie}
-              style={{
-                outline: isActive ? "5px solid green" : undefined,
-              }}
               key={movie.id}
+              ref={(el) => (movieRefs.current[index] = el)}
+              style={{
+                border:
+                  selectedColumn === column && row === index
+                    ? "4px solid yellow"
+                    : "none",
+                padding: "3px",
+                margin: "5px 0",
+                display: "flex",
+                alignItems: "center",
+              }}
             >
               <Link to={`/movie/${movie.id}`}>
                 <img

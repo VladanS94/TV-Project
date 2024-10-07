@@ -1,48 +1,41 @@
 import React, { useState } from "react";
 import "./SignUp.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { paths } from "../root/AppRoutes";
 
 const SignUp = () => {
-  // Use one state object to handle both email and password
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
-  // Function to handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser((prevUser) => ({
       ...prevUser,
-      [name]: value, // Dynamically update the field based on input name
+      [name]: value,
     }));
   };
 
-  // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (user.email && user.password) {
-      // Fetch existing users from localStorage or create a new array if none exist
-      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const users = JSON.parse(localStorage.getItem("User")) || [];
 
-      // Create a new user object
       const newUser = {
         id: users.length + 1,
         email: user.email,
         password: user.password,
       };
 
-      // Add the new user to the array
       users.push(newUser);
 
-      // Save the updated users array back to localStorage
-      localStorage.setItem("users", JSON.stringify(users));
+      localStorage.setItem("User", JSON.stringify(users));
 
       alert("Sign up successful! User stored in local storage.");
 
-      // Optionally clear the form after submission
       setUser({
         email: "",
         password: "",
@@ -50,6 +43,7 @@ const SignUp = () => {
     } else {
       alert("Please fill out both fields.");
     }
+    navigate(paths.login);
   };
 
   return (

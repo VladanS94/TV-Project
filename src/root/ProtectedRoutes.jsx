@@ -1,15 +1,13 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
 import { paths } from "./AppRoutes";
+import { Navigate } from "react-router-dom";
 
 const ProtectedRoutes = ({ children }) => {
-  const user = localStorage.getItem("users");
-  // const user = JSON.parse(localStorage.userData ?? "null");
-  // console.log(localStorage.userData);
+  const isAuthenticated = localStorage.getItem("User");
 
-  // if (user) {
-  //   return <Navigate to={paths.login} />;
-  // }
+  if (!isAuthenticated) {
+    return <Navigate to={paths.signup} replace />;
+  }
 
   return children;
 };

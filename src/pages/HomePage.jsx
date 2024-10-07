@@ -3,11 +3,14 @@ import SideMenu from "../components/SideMenu";
 import useFetch from "../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 import Movie from "../components/Movie";
+import { useUserContext } from "../context";
 
 const HomePage = () => {
-  const [isClosed, setIsClosed] = useState(false);
   const [activeMenuItem, setActiveMenuItem] = useState(0);
-  const [inMenu, setInMenu] = useState(false);
+  const [column, setColumn] = useState(0);
+  const [row, setRow] = useState(-1);
+
+  const { toggleMenu, focus, setFocus } = useUserContext();
 
   const navigate = useNavigate();
 
@@ -15,97 +18,103 @@ const HomePage = () => {
     "https://api.themoviedb.org/3/movie/top_rated"
   );
 
-  const [active, setActive] = useState(0);
-  const selected = data?.[active] ?? null;
+  const getSelectedMovie = () => {
+    let selected = null;
+    if (focus === "movies") {
+      if (column === 0) selected = data?.[row] ?? null;
+      else if (column === 1) selected = horor?.[row] ?? null;
+      else if (column === 2) selected = popular?.[row] ?? null;
+    }
+    return selected;
+  };
+
+  const selected = getSelectedMovie();
+
+  console.log(column, row, focus, selected);
 
   const enterSingleMovie = useCallback(
     (e) => {
-      if (e.keyCode === 13 && selected) {
+      if (e.key === "Enter" && selected) {
         navigate(`/movie/${selected.id}`);
       }
     },
     [selected, navigate]
   );
-
   useEffect(() => {
-    const allItems = Array.from(document.querySelector(".movie-list").children);
-    const selectedDiv = allItems[active];
-    if (selectedDiv)
-      selectedDiv.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "center",
-      });
-
-    const moveItem = (e) => {
-      if (!inMenu) {
-        if (e.key === "ArrowRight" && active < data.length - 1) {
-          setActive((prev) => prev + 1);
-        }
-        if (e.key === "ArrowLeft") {
-          if (active > 0) {
-            setActive((prev) => prev - 1);
-          } else {
-            setInMenu(true);
+    if (focus === "movies") {
+      const handleKeyDown = (e) => {
+        if (e.key === "ArrowDown") {
+          column !== 2 && setColumn(column + 1);
+        } else if (e.key === "ArrowUp") {
+          column !== 0 && setColumn(column - 1);
+        } else if (e.key === "ArrowRight") {
+          row < 19 && setRow(row + 1);
+        } else if (e.key === "ArrowLeft") {
+          row !== -1 && setRow(row - 1);
+          if (row === 0) {
+            setFocus("sidemenu");
+            toggleMenu();
           }
         }
-        if (e.key === "Enter") {
-          enterSingleMovie(e);
-        }
-      } else {
-        if (e.key === "ArrowDown") {
-          setActiveMenuItem((prev) => prev + 1);
-        }
-        if (e.key === "ArrowUp" && activeMenuItem > 0) {
-          setActiveMenuItem((prev) => prev - 1);
-        }
-        if (e.key === "ArrowRight") {
-          setInMenu(false);
-        }
-      }
+      };
+
+      window.addEventListener("keydown", handleKeyDown);
+
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [column, focus, row, toggleMenu, setFocus]);
+
+  useEffect(() => {
+    window.addEventListener("keydown", enterSingleMovie);
+
+    return () => {
+      window.removeEventListener("keydown", enterSingleMovie);
     };
-    window.addEventListener("keydown", moveItem);
-    return () => window.removeEventListener("keydown", moveItem);
-  }, [
-    active,
-    data.length,
-    inMenu,
-    activeMenuItem,
-    selected,
-    navigate,
-    enterSingleMovie,
-  ]);
+  }, [enterSingleMovie]);
+
+  useEffect(() => {
+    if (focus === "movies") {
+      setRow(0);
+    }
+  }, [focus]);
 
   return (
     <div className="home-page">
-      <div
-        onSubmit={() => setIsClosed(false)}
-        style={{ width: isClosed ? "100px" : "250px" }}
-        className="side-menu"
-      >
-        <SideMenu activeMenuItem={activeMenuItem} />
-      </div>
-      <div onClick={() => setIsClosed(true)} className="right-side">
+      <SideMenu
+        focus={focus}
+        onChangeFouces={setFocus}
+        activeMenuItem={activeMenuItem}
+      />
+
+      <div className="right-side">
         <Movie
           title="Top Rated"
           data={data}
-          setIsClosed={setIsClosed}
           selected={selected}
           enterSingleMovie={enterSingleMovie}
+          selectedColumn={column}
+          column={0}
+          row={row}
         />
         <Movie
           title="Horor"
           data={horor}
-          setIsClosed={setIsClosed}
           selected={selected}
           enterSingleMovie={enterSingleMovie}
+          selectedColumn={column}
+          column={1}
+          row={row}
         />
         <Movie
           title="Popular"
           data={popular}
-          setIsClosed={setIsClosed}
           selected={selected}
           enterSingleMovie={enterSingleMovie}
+          selectedColumn={column}
+          column={2}
+          row={row}
         />
       </div>
     </div>

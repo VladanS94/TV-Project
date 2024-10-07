@@ -1,15 +1,33 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 const UserContext = React.createContext();
 
 export const UserProvider = ({ children }) => {
-  const users = JSON.parse(localStorage.getItem("users"));
+  const [activeMenu, setActiveMenu] = useState("notActiveMenu");
+  const [selectedItem, setSelectedItem] = useState(0);
+  const [focus, setFocus] = useState("sidemenu");
 
-  if(!users){
-    
-  }
+  const toggleMenu = () => {
+    setActiveMenu((prevState) =>
+      prevState === "activeMenu" ? "notActiveMenu" : "activeMenu"
+    );
+  };
 
-  return <UserContext.Provider value={users}>{children}</UserContext.Provider>;
+
+  return (
+    <UserContext.Provider
+      value={{
+        activeMenu,
+        toggleMenu,
+        selectedItem,
+        setSelectedItem,
+        focus,
+        setFocus,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 export const useUserContext = () => {
