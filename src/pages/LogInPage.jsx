@@ -17,13 +17,6 @@ const LogInPage = () => {
   const passwordButtonRef = useRef(null);
   const loginButtonRef = useRef(null);
 
-  useEffect(() => {
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
-    if (isAuthenticated) {
-      navigate("/");
-    }
-  }, [navigate]);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
@@ -40,8 +33,6 @@ const LogInPage = () => {
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("User", JSON.stringify(response.data.user));
-
-      console.log(response.data.token, response.data.user);
 
       navigate("/");
     } catch (error) {
@@ -78,53 +69,65 @@ const LogInPage = () => {
 
   useEffect(() => {
     emailButtonRef.current.focus();
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    if (isAuthenticated) {
+      navigate("/");
+    }
+
     window.addEventListener("keydown", handleKeyNavigation);
 
     return () => {
       window.removeEventListener("keydown", handleKeyNavigation);
     };
-  }, [handleKeyNavigation]);
+  }, [handleKeyNavigation, navigate]);
 
   return (
     <div className="login-container">
-      <h2>Log In</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={user.email}
-            onChange={handleInputChange}
-            ref={emailButtonRef}
-            placeholder="Enter your email"
-            required
-          />
+      {loading ? (
+        <p className="loading-message">Loading...</p>
+      ) : (
+        <div>
+          <h2>Log In</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Email:</label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={user.email}
+                onChange={handleInputChange}
+                ref={emailButtonRef}
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Password:</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                value={user.password}
+                onChange={handleInputChange}
+                ref={passwordButtonRef}
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+            {error && (
+              <h3 className="error-message" style={{ color: "red" }}>
+                {error}
+              </h3>
+            )}
+
+            <button type="submit" ref={loginButtonRef}>
+              Log In
+            </button>
+          </form>
+          <Link to="/forgot-password">Forgot Password?</Link>
         </div>
-        <div className="form-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={user.password}
-            onChange={handleInputChange}
-            ref={passwordButtonRef}
-            placeholder="Enter your password"
-            required
-          />
-        </div>
-        {error && <p className="error-message">{error}</p>}
-        {loading ? ( // Show loading indicator
-          <p className="loading-message">Loading...</p>
-        ) : (
-          <button type="submit" ref={loginButtonRef}>
-            Log In
-          </button>
-        )}
-      </form>
-      <Link to="/forgot-password">Forgot Password?</Link>
+      )}
     </div>
   );
 };

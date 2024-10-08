@@ -3,12 +3,14 @@ import { paths } from "./AppRoutes";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoutes = ({ children }) => {
-  const isAuthenticated = localStorage.getItem("User");
+  const isAuthenticated = localStorage.getItem("token");
+  const userID = localStorage.getItem("User");
 
-  if (!isAuthenticated) {
-    return <Navigate to={paths.signup} replace />;
+  if (!userID) {
+    return <Navigate to={paths.signup} />;
+  } else if (!isAuthenticated) {
+    return <Navigate to={paths.login}  />;
   }
-
   return children;
 };
 

@@ -35,7 +35,7 @@ const AppRoutes = () => {
       path: paths.id,
       element: (
         <ProtectedRoutes>
-          <SingleMoviePage />,
+          <SingleMoviePage />
         </ProtectedRoutes>
       ),
     },

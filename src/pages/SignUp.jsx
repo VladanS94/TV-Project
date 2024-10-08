@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./SignUp.css";
 import { Link, useNavigate } from "react-router-dom";
 import { paths } from "../root/AppRoutes";
@@ -9,6 +9,26 @@ const SignUp = () => {
     password: "",
   });
   const navigate = useNavigate();
+
+  const emailButtonRef = useRef(null);
+  const passwordButtonRef = useRef(null);
+  const signupButtonRef = useRef(null);
+
+  const handleKeyNavigation = useCallback((e) => {
+    if (e.key === "ArrowDown") {
+      if (document.activeElement === emailButtonRef.current) {
+        passwordButtonRef.current.focus();
+      } else if (document.activeElement === passwordButtonRef.current) {
+        signupButtonRef.current.focus();
+      }
+    } else if (e.key === "ArrowUp") {
+      if (document.activeElement === signupButtonRef.current) {
+        passwordButtonRef.current.focus();
+      } else if (document.activeElement === passwordButtonRef.current) {
+        emailButtonRef.current.focus();
+      }
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,6 +66,15 @@ const SignUp = () => {
     navigate(paths.login);
   };
 
+  useEffect(() => {
+    emailButtonRef.current.focus();
+    window.addEventListener("keydown", handleKeyNavigation);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyNavigation);
+    };
+  }, [handleKeyNavigation]);
+
   return (
     <div className="signup-container">
       <h2>Sign Up</h2>
@@ -57,6 +86,7 @@ const SignUp = () => {
             name="email"
             value={user.email}
             onChange={handleChange}
+            ref={emailButtonRef}
             placeholder="Enter your email"
             required
           />
@@ -68,6 +98,7 @@ const SignUp = () => {
             name="password"
             value={user.password}
             onChange={handleChange}
+            ref={passwordButtonRef}
             placeholder="Enter your password"
             required
           />
@@ -76,7 +107,9 @@ const SignUp = () => {
           You allready have Acc? Click here:{" "}
           <Link to={paths.login}>Log in</Link>
         </p>
-        <button type="submit">Sign Up</button>
+        <button type="submit" ref={signupButtonRef}>
+          Sign Up
+        </button>
       </form>
     </div>
   );

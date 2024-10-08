@@ -13,20 +13,34 @@ const mock = new MockAdapter(api, { delayResponse: 3000 });
 mock.onPost("/login").reply((config) => {
   const { email, password } = JSON.parse(config.data);
 
-  if (email === "vladan.nish@hotmail.com" && password === "123") {
+  // Retrieve the array of users from localStorage
+  const users = JSON.parse(localStorage.getItem("User")) || [];
+
+  // Find the user whose email and password match the input
+  const foundUser = users.find(
+    (user) => user.email === email && user.password === password
+  );
+
+  if (foundUser) {
+    // Return a 200 response with user data if found
     return [
       200,
       {
         token: "mocked-jwt-token",
         user: {
-          id: 1,
-          name: "Vladan Nish",
-          email: "vladan.nish@hotmail.com",
+          id: foundUser.id,
+          email: foundUser.email,
         },
       },
     ];
   } else {
-    return [401, { message: "Invalid email or password" }];
+    // Return a 401 response if no user is found
+    return [
+      401,
+      {
+        message: "Invalid email or password.",
+      },
+    ];
   }
 });
 
