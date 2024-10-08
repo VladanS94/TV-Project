@@ -32,7 +32,7 @@ const LogInPage = () => {
 
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("User", JSON.stringify(response.data.user));
+      // localStorage.setItem("User", JSON.stringify(response.data.user));
 
       navigate("/");
     } catch (error) {

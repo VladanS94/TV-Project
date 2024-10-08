@@ -30,6 +30,7 @@ mock.onPost("/login").reply((config) => {
         user: {
           id: foundUser.id,
           email: foundUser.email,
+          password: foundUser.password,
         },
       },
     ];
