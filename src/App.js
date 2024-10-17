@@ -1,7 +1,8 @@
+import { useMemo } from "react";
 import "./App.css";
-import Routes from "./root/AppRoutes";
 
 function App() {
+  const Routes = useMemo(() => require("./root/AppRoutes").default, []);
   return (
     <div className="App">
       <Routes />

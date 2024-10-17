@@ -1,0 +1,48 @@
+.home-page {
+    display: flex;
+    min-height: 100dvh;
+  }
+  
+  
+  .right-side {
+    flex-grow: 1;
+    background-color: #95bdd6;
+    padding: 10px 50px 0;
+    overflow: hidden;
+  }
+  
+  .movie-list {
+    display: flex;
+    padding-bottom: 4px;
+    overflow-x: scroll;
+  }
+  .movie-list div {
+    position: relative;
+    margin: 10px;
+    height: 200px;
+    width: 190px;
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+    img {
+      height: 100%;
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
+  }
+  
+  .movie-bg {
+    height: 70dvh;
+    background: linear-gradient(#5a90bc, #173d66);
+    display: flex;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    img{
+      width: 350px;
+      height: 350px;
+      border-radius: 8px;
+    }
+  }

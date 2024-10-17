@@ -1,18 +1,18 @@
 import React, { useContext, useState } from "react";
+import "../components/SideMenu.css";
 
 const UserContext = React.createContext();
 
 export const UserProvider = ({ children }) => {
-  const [activeMenu, setActiveMenu] = useState("notActiveMenu");
+  const [activeMenu, setActiveMenu] = useState("not-active-menu");
   const [selectedItem, setSelectedItem] = useState(0);
   const [focus, setFocus] = useState("sidemenu");
 
   const toggleMenu = () => {
     setActiveMenu((prevState) =>
-      prevState === "activeMenu" ? "notActiveMenu" : "activeMenu"
+      prevState === "active-menu" ? "not-active-menu" : "active-menu"
     );
   };
-
 
   return (
     <UserContext.Provider

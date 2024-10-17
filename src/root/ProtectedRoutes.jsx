@@ -9,7 +9,7 @@ const ProtectedRoutes = ({ children }) => {
   if (!userID) {
     return <Navigate to={paths.signup} />;
   } else if (!isAuthenticated) {
-    return <Navigate to={paths.login}  />;
+    return <Navigate to={paths.login} />;
   }
   return children;
 };

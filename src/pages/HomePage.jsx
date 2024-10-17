@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import SideMenu from "../components/SideMenu";
 import useFetch from "../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 import Movie from "../components/Movie";
 import { useUserContext } from "../context";
+import "./HomePage.css";
 
 const HomePage = () => {
   const [activeMenuItem, setActiveMenuItem] = useState(0);
@@ -18,19 +19,14 @@ const HomePage = () => {
     "https://api.themoviedb.org/3/movie/top_rated"
   );
 
-  const getSelectedMovie = () => {
-    let selected = null;
+  const selected = useMemo(() => {
     if (focus === "movies") {
-      if (column === 0) selected = data?.[row] ?? null;
-      else if (column === 1) selected = horor?.[row] ?? null;
-      else if (column === 2) selected = popular?.[row] ?? null;
+      if (column === 0) return data?.[row] ?? null;
+      if (column === 1) return horor?.[row] ?? null;
+      if (column === 2) return popular?.[row] ?? null;
     }
-    return selected;
-  };
-
-  const selected = getSelectedMovie();
-
-  console.log(column, row, focus, selected);
+    return null;
+  }, [focus, column, row, data, horor, popular]);
 
   const enterSingleMovie = useCallback(
     (e) => {

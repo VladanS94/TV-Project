@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import play from "../assets/play.svg";
 import favorite from "../assets/favorite.svg";
+import "./SingleMoviePage.css";
 
 const apiKey = process.env.REACT_APP_API_KEY;
 
