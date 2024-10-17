@@ -43,8 +43,11 @@
     align-items: center;
     font-size: 1rem;
     transition: font-size 1s ease;
+    p{
+        width: 70%;
+    }
   }
-  
+
   .mehr {
     display: flex;
     justify-content: space-around;
@@ -52,6 +55,9 @@
     margin-top: 50px;
     font-size: 1rem;
     transition: font-size 1s ease;
+    p{
+        width: 70%;
+    }
   }
   
   
@@ -67,16 +73,19 @@
   .informations.focused {
     font-size: 1.2rem; 
     p{
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: bolder;
+      width: 70%;
     }
   }
   
   .mehr.focused {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     p{
       font-size: 1.2rem;
       font-weight: bolder;
+      width: 70%;
+
     }
   }
   
