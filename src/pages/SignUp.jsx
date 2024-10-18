@@ -13,6 +13,11 @@ const SignUp = () => {
   const emailButtonRef = useRef(null);
   const passwordButtonRef = useRef(null);
   const signupButtonRef = useRef(null);
+  const logInButtonRef = useRef(null);
+
+  const sendToLogInPage = useCallback(() => {
+    navigate(paths.login);
+  }, [navigate]);
 
   const handleKeyNavigation = useCallback((e) => {
     if (e.key === "ArrowDown") {
@@ -20,6 +25,8 @@ const SignUp = () => {
         passwordButtonRef.current.focus();
       } else if (document.activeElement === passwordButtonRef.current) {
         signupButtonRef.current.focus();
+      } else if (document.activeElement === signupButtonRef.current) {
+        logInButtonRef.current.focus();
       }
     } else if (e.key === "ArrowUp") {
       if (document.activeElement === signupButtonRef.current) {
@@ -103,13 +110,24 @@ const SignUp = () => {
             required
           />
         </div>
-        <p>
-          You allready have Acc? Click here:{" "}
-          <Link to={paths.login}>Log in</Link>
-        </p>
+
         <button type="submit" ref={signupButtonRef}>
           Sign Up
         </button>
+        <p>
+          You allready have Acc?
+          <Link
+            ref={logInButtonRef}
+            to={paths.login}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                sendToLogInPage();
+              }
+            }}
+          >
+            Log in
+          </Link>
+        </p>
       </form>
     </div>
   );

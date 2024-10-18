@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useUserContext } from "../context";
+import { useNavigate } from "react-router-dom";
 import userIcon from "../assets/user.png";
 import cards from "../assets/cards.png";
 import movie from "../assets/movie.png";
@@ -9,10 +10,12 @@ import headset from "../assets/headset.png";
 import games from "../assets/games.png";
 import search from "../assets/search.png";
 import favorite from "../assets/favorite.png";
+import { paths } from "../root/AppRoutes";
 
 const SideMenu = ({ focus, onChangeFouces }) => {
   const { toggleMenu, selectedItem, setSelectedItem, activeMenu } =
     useUserContext();
+  const navigate = useNavigate();
 
   const allItems = [
     { id: 0, label: "Konto", icon: userIcon },
@@ -24,7 +27,13 @@ const SideMenu = ({ focus, onChangeFouces }) => {
     { id: 6, label: "Games", icon: games },
     { id: 7, label: "Suchen", icon: search },
     { id: 8, label: "Favoriten", icon: favorite },
+    { id: 9, label: "Logout", icon: "" },
   ];
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate(paths.login);
+  };
 
   useEffect(() => {
     if (focus === "sidemenu") {
@@ -36,9 +45,15 @@ const SideMenu = ({ focus, onChangeFouces }) => {
         } else if (e.key === "ArrowUp") {
           setSelectedItem((prev) => (prev > 0 ? prev - 1 : prev));
         } else if (e.key === "ArrowRight") {
-          onChangeFouces("movies");
-          setSelectedItem(-1);
-          toggleMenu();
+          if (selectedItem !== 9) {
+            onChangeFouces("movies");
+            setSelectedItem(-1);
+            toggleMenu();
+          }
+        } else if (e.key === "Enter") {
+          if (selectedItem === 9) {
+            handleLogout();
+          }
         }
       };
 
@@ -48,11 +63,14 @@ const SideMenu = ({ focus, onChangeFouces }) => {
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [allItems.length, setSelectedItem, onChangeFouces, focus, toggleMenu]);
-
-  useEffect(() => {
-    focus === "sidemenu" && setSelectedItem(0);
-  }, [focus, setSelectedItem]);
+  }, [
+    allItems.length,
+    setSelectedItem,
+    onChangeFouces,
+    focus,
+    toggleMenu,
+    selectedItem,
+  ]);
 
   return (
     <div className={activeMenu}>

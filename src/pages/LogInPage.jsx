@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./LogInPage.css";
 import api from "../hooks/mockAPI";
+import { paths } from "../root/AppRoutes";
 
 const LogInPage = () => {
   const [user, setUser] = useState({
@@ -16,6 +17,7 @@ const LogInPage = () => {
   const emailButtonRef = useRef(null);
   const passwordButtonRef = useRef(null);
   const loginButtonRef = useRef(null);
+  const signUpAccountRef = useRef(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,7 +35,7 @@ const LogInPage = () => {
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("token", response.data.token);
 
-      navigate("/");
+      navigate(paths.home);
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setError("Invalid email or password.");
@@ -50,15 +52,23 @@ const LogInPage = () => {
     });
   };
 
+  const sendToSignUpPage = useCallback(() => {
+    navigate(paths.signup);
+  }, [navigate]);
+
   const handleKeyNavigation = useCallback((e) => {
     if (e.key === "ArrowDown") {
       if (document.activeElement === emailButtonRef.current) {
         passwordButtonRef.current.focus();
       } else if (document.activeElement === passwordButtonRef.current) {
         loginButtonRef.current.focus();
+      } else if (document.activeElement === loginButtonRef.current) {
+        signUpAccountRef.current.focus();
       }
     } else if (e.key === "ArrowUp") {
-      if (document.activeElement === loginButtonRef.current) {
+      if (document.activeElement === signUpAccountRef.current) {
+        loginButtonRef.current.focus();
+      } else if (document.activeElement === loginButtonRef.current) {
         passwordButtonRef.current.focus();
       } else if (document.activeElement === passwordButtonRef.current) {
         emailButtonRef.current.focus();
@@ -124,6 +134,20 @@ const LogInPage = () => {
               Log In
             </button>
           </form>
+          <p>
+            Don't have an account?
+            <Link
+              ref={signUpAccountRef}
+              to={paths.signup}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  sendToSignUpPage();
+                }
+              }}
+            >
+              Sign Up
+            </Link>
+          </p>
           <Link to="/forgot-password">Forgot Password?</Link>
         </div>
       )}
