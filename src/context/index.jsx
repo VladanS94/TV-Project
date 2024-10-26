@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import "../components/SideMenu.css";
+import "../components/SideMenu/SideMenu.css";
 
 const UserContext = React.createContext();
 

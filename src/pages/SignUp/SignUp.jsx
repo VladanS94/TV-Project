@@ -1,23 +1,17 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./SignUp.css";
-import { Link, useNavigate } from "react-router-dom";
-import { paths } from "../root/AppRoutes";
+import { Link } from "react-router-dom";
 
-const SignUp = () => {
+const SignUp = ({ setCurrentModal }) => {
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
-  const navigate = useNavigate();
 
   const emailButtonRef = useRef(null);
   const passwordButtonRef = useRef(null);
   const signupButtonRef = useRef(null);
   const logInButtonRef = useRef(null);
-
-  const sendToLogInPage = useCallback(() => {
-    navigate(paths.login);
-  }, [navigate]);
 
   const handleKeyNavigation = useCallback((e) => {
     if (e.key === "ArrowDown") {
@@ -70,7 +64,7 @@ const SignUp = () => {
     } else {
       alert("Please fill out both fields.");
     }
-    navigate(paths.login);
+    setCurrentModal("login");
   };
 
   useEffect(() => {
@@ -118,10 +112,9 @@ const SignUp = () => {
           You allready have Acc?
           <Link
             ref={logInButtonRef}
-            to={paths.login}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                sendToLogInPage();
+                setCurrentModal("login");
               }
             }}
           >

@@ -17,9 +17,6 @@
     flex-shrink: 0;
   }
 
-
-
-  
 .side-menu-title {
     color: #9e325d;
     padding-left: 20px;
@@ -82,4 +79,19 @@
   }
   .side-menu-down-p {
     padding-left: 30px;
+  }
+
+  .side-menu-list li {
+    padding: 10px;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .side-menu-list li:focus-visible {
+    outline: none;
+    border: 4px solid yellow; 
+  }
+  .side-menu-list li.no-focus-visible:focus-visible {
+    border: none; 
   }

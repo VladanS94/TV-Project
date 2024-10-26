@@ -8,10 +8,8 @@ const useFetch = (url) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [horor, setHoror] = useState([]);
-  const [popular, setPopular] = useState([]);
 
-  const urlWithPage = url + `?api_key=${apiKey}&page=${page}`;
+  const urlWithPage = url + `?api_key=${apiKey}&page=${page}?&with_genres=14`;
 
   const handlePageAdd = () => setPage((prev) => prev + 1);
 
@@ -27,41 +25,15 @@ const useFetch = (url) => {
     }
   }, [urlWithPage]);
 
-  const fetchHororMovie = useCallback(async () => {
-    try {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=14`
-      );
-      setHoror(response.data.results);
-    } catch (error) {
-      console.error("Error fetching the movie data:", error);
-    }
-  }, []);
-
-  const fetchPopularMovie = useCallback(async () => {
-    try {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=1`
-      );
-      setPopular(response.data.results);
-    } catch (error) {
-      console.error("Error fetching the movie data:", error);
-    }
-  }, []);
-
   useEffect(() => {
     fetchData();
-    fetchHororMovie();
-    fetchPopularMovie();
-  }, [fetchData, fetchHororMovie, fetchPopularMovie]);
+  }, [fetchData]);
 
   return {
     data,
     error,
     loading,
     handlePageAdd,
-    horor,
-    popular,
   };
 };
 

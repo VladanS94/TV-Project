@@ -1,18 +1,21 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useRef, useCallback, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "./LogInPage.css";
-import api from "../hooks/mockAPI";
-import { paths } from "../root/AppRoutes";
+import { useLocalStorage } from "react-use";
+import { axiosInstance } from "../../axios/config";
+import KeyboardModal from "../../components/Keyboard/KeyboardModal";
+import Loader from "../../components/Loader/Loader";
 
-const LogInPage = () => {
+const LogInPage = ({ setCurrentModal }) => {
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const navigate = useNavigate();
+  const [token, setToken] = useLocalStorage("token", null);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [focusedInput, setFocusedInput] = useState("");
 
   const emailButtonRef = useRef(null);
   const passwordButtonRef = useRef(null);
@@ -30,12 +33,8 @@ const LogInPage = () => {
     setLoading(true);
 
     try {
-      const response = await api.post("/login", user);
-
-      localStorage.setItem("isAuthenticated", "true");
-      localStorage.setItem("token", response.data.token);
-
-      navigate(paths.home);
+      const response = await axiosInstance.post("/", user);
+      setToken(response.data.token);
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setError("Invalid email or password.");
@@ -50,11 +49,8 @@ const LogInPage = () => {
       email: "",
       password: "",
     });
+    setCurrentModal("home");
   };
-
-  const sendToSignUpPage = useCallback(() => {
-    navigate(paths.signup);
-  }, [navigate]);
 
   const handleKeyNavigation = useCallback((e) => {
     if (e.key === "ArrowDown") {
@@ -76,24 +72,32 @@ const LogInPage = () => {
     }
   }, []);
 
+  const handleShowKeyboard = (e) => {
+    if (e.key === "Enter") {
+      if (document.activeElement === emailButtonRef.current) {
+        setFocusedInput("email");
+      } else if (document.activeElement === passwordButtonRef.current) {
+        setFocusedInput("password");
+      }
+      setKeyboardVisible(true);
+    }
+    if (e.key === "Escape") {
+      setKeyboardVisible(false);
+    }
+  };
+
   useEffect(() => {
     emailButtonRef.current.focus();
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
-    if (isAuthenticated) {
-      navigate("/");
-    }
-
     window.addEventListener("keydown", handleKeyNavigation);
-
     return () => {
       window.removeEventListener("keydown", handleKeyNavigation);
     };
-  }, [handleKeyNavigation, navigate]);
+  }, [handleKeyNavigation]);
 
   return (
-    <div className="login-container">
+    <div className="login">
       {loading ? (
-        <p className="loading-message">Loading...</p>
+        <Loader />
       ) : (
         <div>
           <h2>Log In</h2>
@@ -107,6 +111,7 @@ const LogInPage = () => {
                 value={user.email}
                 onChange={handleInputChange}
                 ref={emailButtonRef}
+                onKeyDown={handleShowKeyboard}
                 placeholder="Enter your email"
                 required
               />
@@ -120,6 +125,7 @@ const LogInPage = () => {
                 value={user.password}
                 onChange={handleInputChange}
                 ref={passwordButtonRef}
+                onKeyDown={handleShowKeyboard}
                 placeholder="Enter your password"
                 required
               />
@@ -129,7 +135,6 @@ const LogInPage = () => {
                 {error}
               </h3>
             )}
-
             <button type="submit" ref={loginButtonRef}>
               Log In
             </button>
@@ -138,19 +143,23 @@ const LogInPage = () => {
             Don't have an account?
             <Link
               ref={signUpAccountRef}
-              to={paths.signup}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  sendToSignUpPage();
+                  setCurrentModal("sign-up");
                 }
               }}
             >
               Sign Up
             </Link>
           </p>
-          <Link to="/forgot-password">Forgot Password?</Link>
+          <Link>Forgot Password?</Link>
         </div>
       )}
+      <KeyboardModal
+        show={keyboardVisible}
+        onClose={() => setKeyboardVisible(false)}
+        inputType={focusedInput}
+      />
     </div>
   );
 };
