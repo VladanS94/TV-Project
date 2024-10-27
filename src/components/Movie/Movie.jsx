@@ -17,10 +17,10 @@ const Movie = ({
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [movieID, setMovieID] = useState(null);
 
+  console.log(isActiveRow);
+
   const movieRefs = useRef([]);
   const { setSelectedItem } = useUserContext();
-
-  console.log(row, col, focus, isActiveRow);
 
   const openModal = (movie) => {
     setSelectedMovie(movie);
