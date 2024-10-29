@@ -1,10 +1,9 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./LogInPage.css";
-import { useLocalStorage } from "react-use";
-import { axiosInstance } from "../../axios/config";
 import KeyboardModal from "../../components/Keyboard/KeyboardModal";
 import Loader from "../../components/Loader/Loader";
+import usePost from "../../hooks/useAuth";
 
 const LogInPage = ({ setCurrentModal }) => {
   const [user, setUser] = useState({
@@ -13,7 +12,6 @@ const LogInPage = ({ setCurrentModal }) => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [token, setToken] = useLocalStorage("token", null);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [focusedInput, setFocusedInput] = useState("");
 
@@ -21,6 +19,8 @@ const LogInPage = ({ setCurrentModal }) => {
   const passwordButtonRef = useRef(null);
   const loginButtonRef = useRef(null);
   const signUpAccountRef = useRef(null);
+
+  const { logIn } = usePost();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,18 +32,7 @@ const LogInPage = ({ setCurrentModal }) => {
     setError("");
     setLoading(true);
 
-    try {
-      const response = await axiosInstance.post("/", user);
-      setToken(response.data.token);
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        setError("Invalid email or password.");
-      } else {
-        setError("An error occurred. Please try again.");
-      }
-    } finally {
-      setLoading(false);
-    }
+    await logIn("/", user);
 
     setUser({
       email: "",

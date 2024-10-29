@@ -17,8 +17,6 @@ const Movie = ({
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [movieID, setMovieID] = useState(null);
 
-  console.log(isActiveRow);
-
   const movieRefs = useRef([]);
   const { setSelectedItem } = useUserContext();
 
