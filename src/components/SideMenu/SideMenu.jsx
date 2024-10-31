@@ -3,12 +3,19 @@ import { useUserContext } from "../../context";
 import { allItems } from "./side-menu-list";
 import { useLocalStorage } from "react-use";
 
-const SideMenu = ({ focus, setFocus, setCurrentModal }) => {
+const SideMenu = ({ setCurrentModal }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const itemsRef = useRef([]);
 
-  const { toggleMenu, selectedItem, setSelectedItem, activeMenu } =
-    useUserContext();
+  const {
+    toggleMenu,
+    selectedItem,
+    setSelectedItem,
+    activeMenu,
+    focus,
+    setFocus,
+  } = useUserContext();
+
   const [token, setToken, removeToken] = useLocalStorage("token");
 
   const handleLogout = () => {
@@ -52,6 +59,8 @@ const SideMenu = ({ focus, setFocus, setCurrentModal }) => {
     toggleMenu,
     selectedItem,
   ]);
+
+  
 
   return (
     <div className={activeMenu}>

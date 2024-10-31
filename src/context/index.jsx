@@ -8,6 +8,8 @@ export const UserProvider = ({ children }) => {
   const [selectedItem, setSelectedItem] = useState(0);
   const [focus, setFocus] = useState("sidemenu");
 
+  console.log(focus);
+
   const toggleMenu = () => {
     setActiveMenu((prevState) =>
       prevState === "active-menu" ? "not-active-menu" : "active-menu"

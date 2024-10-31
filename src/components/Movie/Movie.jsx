@@ -2,23 +2,14 @@ import React, { useRef, useEffect, useState } from "react";
 import { useUserContext } from "../../context";
 import SingleMoviePage from "../../pages/SingleMovie/SingleMoviePage";
 
-const Movie = ({
-  data,
-  title,
-  isActiveRow,
-  setRow,
-  row,
-  setFocus,
-  toggleMenu,
-  focus,
-}) => {
+const Movie = ({ data, title, isActiveRow, setRow, row }) => {
   const [col, setCol] = useState(-1);
   const [showModal, setShowModal] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [movieID, setMovieID] = useState(null);
 
   const movieRefs = useRef([]);
-  const { setSelectedItem } = useUserContext();
+  const { setSelectedItem, focus, setFocus, toggleMenu } = useUserContext();
 
   const openModal = (movie) => {
     setSelectedMovie(movie);
@@ -84,6 +75,11 @@ const Movie = ({
       });
     }
   }, [isActiveRow, col, row, focus]);
+  useEffect(() => {
+    if (focus === "movies" && col === -1) {
+      setCol(0);
+    }
+  }, [focus, col]);
 
   return (
     <div>

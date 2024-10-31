@@ -33,8 +33,6 @@ const HomePage = ({ setCurrentModal }) => {
   return (
     <div className="home-page">
       <SideMenu
-        focus={focus}
-        setFocus={setFocus}
         activeMenuItem={activeMenuItem}
         setCurrentModal={setCurrentModal}
       />
@@ -47,9 +45,6 @@ const HomePage = ({ setCurrentModal }) => {
           row={row}
           isActiveRow={row === 0}
           setRow={setRow}
-          setFocus={setFocus}
-          toggleMenu={toggleMenu}
-          focus={focus}
         />
         <Movie
           title="Horror"
@@ -58,9 +53,6 @@ const HomePage = ({ setCurrentModal }) => {
           row={row}
           isActiveRow={row === 1}
           setRow={setRow}
-          setFocus={setFocus}
-          toggleMenu={toggleMenu}
-          focus={focus}
         />
         <Movie
           title="Popular"
@@ -69,9 +61,6 @@ const HomePage = ({ setCurrentModal }) => {
           row={row}
           isActiveRow={row === 2}
           setRow={setRow}
-          setFocus={setFocus}
-          toggleMenu={toggleMenu}
-          focus={focus}
         />
       </div>
     </div>

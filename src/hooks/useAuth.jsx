@@ -13,7 +13,6 @@ const useAuth = () => {
     setError(null);
 
     try {
-      console.log(url, payload);
       const response = await axiosInstance.post(url, payload);
       setData(response.data);
       setToken(response.data.token);
